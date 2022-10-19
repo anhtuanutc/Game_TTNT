@@ -23,7 +23,7 @@ public class VangScript : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if(other.gameObject.name == "luoiCau") {
 			isMoveFollow = true;
-			GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction = TypeAction.KeoCau;
+			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.KeoCau;
 			GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().velocity = -GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().velocity;
 			GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().speed -= this.speed;
 		}
@@ -39,8 +39,8 @@ public class VangScript : MonoBehaviour {
 				transform.position = new Vector3(target.position.x, 
 				                                 target.position.y - gameObject.GetComponent<Collider2D>().GetComponent<Collider2D>().bounds.size.y / 2, 
 				                                 transform.position.z);	
-			if(GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.Nghi) {
-				GameObject.Find("GamePlay").GetComponent<GamePlayScript>().score += this.score;
+			if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.Nghi) {
+				//GameObject.Find("GamePlay").GetComponent<GamePlayScript>().score += this.score;
 				Destroy(gameObject);
 			}
 		}

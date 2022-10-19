@@ -51,8 +51,8 @@ public class LuoiCauScript : MonoBehaviour {
 	void FixedUpdate() {
 //		if(CGameManager.Instance.gameState == EnumStateGame.Play) 
 		{
-			if(GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.ThaCau || 
-			   GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.KeoCau)
+			if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.ThaCau || 
+			   GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.KeoCau)
 				GetComponent<Rigidbody2D>().velocity = velocity * speed;
 		}
 	}
@@ -91,9 +91,9 @@ public class LuoiCauScript : MonoBehaviour {
 
 	void checkTouchScene() {
 		bool istouch = Input.GetMouseButtonDown(0);
-		if(istouch && GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.Nghi)
+		if(istouch && GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.Nghi)
 		{
-			GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction = TypeAction.ThaCau;
+			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.ThaCau;
 			velocity = new Vector2(transform.position.x - target.position.x, 
 			                       transform.position.y - target.position.y);
 			velocity.Normalize();
@@ -102,9 +102,9 @@ public class LuoiCauScript : MonoBehaviour {
 	}
 	//kiem tra khi luoi cau ra ngoai tam nhin cua camera
 	void checkMoveOutCameraView() {
-		if(GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.ThaCau) {
+		if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.ThaCau) {
 			if(!checkPositionOutBound()) {
-				GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction = TypeAction.KeoCau;
+				GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.KeoCau;
 				velocity = -velocity;
 			}
 		}
@@ -112,10 +112,10 @@ public class LuoiCauScript : MonoBehaviour {
 
 	//kiem tra khi luoi ca keo len mat nuoc
 	void checkKeoCauXong() {
-		if(transform.localPosition.y > maxY && GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.KeoCau) {
+		if(transform.localPosition.y > maxY && GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.KeoCau) {
 			Debug.Log("keo cau xong");
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-			GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction = TypeAction.Nghi;
+			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.Nghi;
 			transform.localPosition = prePosition;
 		}
 	}

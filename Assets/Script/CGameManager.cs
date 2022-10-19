@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-public enum TypeAction {Nghi, ThaCau, KeoCau};
 public enum EnumFishAction {Boi, CanCau, DopMoi, NhayVaoGio};
 public enum EnumStateGame {Play, Pause, Win, Lose, Menu};
 
@@ -15,8 +14,7 @@ public class CGameManager : MonoBehaviour {
 	public string keyLevelNow = "levelNow";
 	public string keyLevelMax = "levelMax";
 	public string keyNumberLevel = "numberLevel";
-
-//	private static CGameManager _instance = null;    
+ 
 	public event OnStateChangeHandler OnStateChange;
 	public EnumStateGame gameState { get; private set; }
 	public int score { get; private set; }
@@ -33,32 +31,8 @@ public class CGameManager : MonoBehaviour {
 			DestroyImmediate(gameObject);
 			return;
 		}
-//		if(PlayerPrefs.GetInt(keyLevelNow) == 0) {
-//			PlayerPrefs.SetInt(keyLevelNow, 1);
-//		}
-//		if(PlayerPrefs.GetInt(keyLevelMax) == 0) {
-//			PlayerPrefs.SetInt(keyLevelMax, 1);
-//		}
-//		if(PlayerPrefs.GetInt(keyNumberLevel) == 0) {
-//			PlayerPrefs.SetInt(keyNumberLevel, 10);
-//		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-	}
-//	protected CGameManager() {}
-//
-//	// Singleton pattern implementation
-//	public static CGameManager Instance { 
-//		get {
-//			if (_instance == null) {
-//				_instance = new CGameManager(); 
-//			}  
-//			return _instance;
-//		} 
-//	}
-
-	void Update() {
-
 	}
 
 	public void SetGameState(EnumStateGame gameState) {
