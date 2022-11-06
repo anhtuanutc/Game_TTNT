@@ -4,6 +4,8 @@ using TMPro;
 using System.Collections.Generic;
 
 public class GamePlayScript : MonoBehaviour {
+	public static GamePlayScript instance;
+
 	public TextMeshProUGUI time_text;
 	public List<TextMeshProUGUI> score_texts;
 	public List<GameObject> arrows;
@@ -15,7 +17,11 @@ public class GamePlayScript : MonoBehaviour {
 	int cur_time;
 
 	public GameObject []levelsVang;
-	// Use this for initialization
+	private void Awake()
+	{
+		instance = this;
+	}
+	
 	void Start () {
 		time = 15;
 		cur_time = time;
@@ -42,11 +48,20 @@ public class GamePlayScript : MonoBehaviour {
 		round_max = 10;
 		round_player_1 = true;
 		SetTurn();
+		foreach (var item in score_texts)
+		{
+			item.text = "Score: 0";
+		}
 		//Random vi tri vang di
-		for(int i = 0; i < levelsVang.Length; i++) {
+		for (int i = 0; i < levelsVang.Length; i++) {
 			
 		}
 	}
+
+	public void SetScoretTxt(int point)
+    {
+		score_texts[round_player_1 ? 0 : 1].text = "Score:" + point;
+    }
 
 	void SetTurn()
     {

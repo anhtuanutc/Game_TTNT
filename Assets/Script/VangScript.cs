@@ -1,48 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VangScript : MonoBehaviour {
-	public bool isMoveFollow = false;
-	public float maxY;
-	public int score;
-	public float speed;
-	// Use this for initialization
-	void Start () {
-		isMoveFollow = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+public class VangScript : MonoBehaviour
+{
+    public bool isMoveFollow = false;
+    public float maxY;
+    public int score;
+    public float speed;
+    // Use this for initialization
 
-	}
+    Transform t_luoi_cau;
+    DayCau day_cau;
 
-	void FixedUpdate() {
-		moveFllowTarget(GameObject.Find("luoiCau").transform);
-	}
+    void Start()
+    {
+        isMoveFollow = false;
+    }
 
-	void OnTriggerEnter2D(Collider2D other) {
-		if(other.gameObject.name == "luoiCau") {
-			isMoveFollow = true;
-			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.KeoCau;
-			GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().velocity = -GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().velocity;
-			GameObject.Find("luoiCau").GetComponent<LuoiCauScript>().speed -= this.speed;
-		}
-	}
+    void FixedUpdate()
+    {
+        moveFllowTarget();
+    }
 
-	void moveFllowTarget(Transform target) {
-		if(isMoveFollow) 
-		{
-				Quaternion tg = Quaternion.Euler(target.parent.transform.rotation.x, 
-				                                 target.parent.transform.rotation.y, 
-				                                 90 + target.parent.transform.rotation.z);
-//				transform.rotation = Quaternion.Slerp(transform.rotation, tg, 0.5f);
-				transform.position = new Vector3(target.position.x, 
-				                                 target.position.y - gameObject.GetComponent<Collider2D>().GetComponent<Collider2D>().bounds.size.y / 2, 
-				                                 transform.position.z);	
-			if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.Nghi) {
-				//GameObject.Find("GamePlay").GetComponent<GamePlayScript>().score += this.score;
-				Destroy(gameObject);
-			}
-		}
-	}
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("LuoiCau") && !isMoveFollow)
+        {
+            t_luoi_cau = other.transform;
+            day_cau = other.transform.parent.GetComponent<DayCau>();
+            LuoiCauScript luoi_cau = other.GetComponent<LuoiCauScript>();
+            isMoveFollow = true;
+            day_cau.typeAction = TypeAction.KeoCau;
+            luoi_cau.velocity = -luoi_cau.velocity;
+            luoi_cau.speed -= speed;
+        }
+    }
+
+    void moveFllowTarget()
+    {
+        if (isMoveFollow)
+        {
+            if (!day_cau.my_turn)
+            {
+                isMoveFollow = false;
+                return;
+            }
+            Transform target = t_luoi_cau;
+            Quaternion tg = Quaternion.Euler(target.parent.transform.rotation.x, target.parent.transform.rotation.y,
+                                             90 + target.parent.transform.rotation.z);
+            transform.rotation = Quaternion.Slerp(transform.rotation, tg, 0.5f);
+            transform.position = new Vector3(target.position.x,
+                                             target.position.y - gameObject.GetComponent<Collider2D>().bounds.size.y / 2,
+                                             transform.position.z);
+            if (day_cau.typeAction == TypeAction.Nghi)
+            {
+                day_cau.ReceivePoint(score);
+                Destroy(gameObject);
+            }
+        }
+    }
 }

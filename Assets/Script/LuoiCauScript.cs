@@ -6,23 +6,19 @@ public class LuoiCauScript : MonoBehaviour {
 	public float speedMin;
 	public float speedBegin;
 	public Vector2 velocity;
-	public float maxX;
-	public float minX;
-	public float minY;
 	public float maxY;
 	public Transform target;
 	Vector3 prePosition;
+	public DayCau day_cau;
 
 	public int type;
 
 	public bool isUpSpeed;
 	public float timeUpSpeed;
-	// Use this for initialization
+
 	void Start () {
 		isUpSpeed = false;
-		prePosition = transform.localPosition;
-
-//		this.StartCoroutine("TimeUpSpeed");
+		prePosition = transform.localPosition; 
 	}
 
 	public IEnumerator TimeUpSpeed ()
@@ -38,7 +34,7 @@ public class LuoiCauScript : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
 		checkKeoCauXong();
 //		if(CGameManager.Instance.gameState == EnumStateGame.Play) 
@@ -50,40 +46,10 @@ public class LuoiCauScript : MonoBehaviour {
 	}
 	void FixedUpdate() {
 //		if(CGameManager.Instance.gameState == EnumStateGame.Play) 
-		{
-			if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.ThaCau || 
-			   GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.KeoCau)
+		if(day_cau.typeAction == TypeAction.ThaCau || day_cau.typeAction == TypeAction.KeoCau)
 				GetComponent<Rigidbody2D>().velocity = velocity * speed;
-		}
 	}
 
-//	void OnTriggerEnter2D(Collider2D other) {
-//		//		Debug.Log("enter");
-//		if(other.gameObject.name.CompareTo("dau") == 0) {
-//			GameObject fish = other.gameObject.transform.parent.gameObject;
-//			fish.GetComponent<CFishScript>().fishAction = EnumFishAction.CanCau;
-//			if(!isUpSpeed) {
-//				if(speed > fish.GetComponent<CFishScript>().reduceSpeed) {
-//					speed = speed - fish.GetComponent<CFishScript>().reduceSpeed;
-//					if(speed < speedMin) 
-//						speed = speedMin;
-//				}
-//			}
-//
-//			if(GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction == TypeAction.ThaCau) {
-//				GameObject.Find("dayCau").GetComponent<DayCauScript>().typeAction = TypeAction.KeoCau;
-//				velocity = -velocity;
-//			}
-//		}
-//
-//	}
-	
-	void OnTriggerExit2D(Collider2D other) {
-//		Debug.Log("exit");
-//		if(other.gameObject.name == "luoiCau") {
-//			isBorder = false;
-//		}
-	}
 
 	bool checkPositionOutBound() {
 		return  gameObject.GetComponent<Renderer>().isVisible ;
@@ -91,9 +57,10 @@ public class LuoiCauScript : MonoBehaviour {
 
 	void checkTouchScene() {
 		bool istouch = Input.GetMouseButtonDown(0);
-		if(istouch && GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.Nghi)
+		
+		if (istouch && day_cau.typeAction == TypeAction.Nghi && day_cau.my_turn)
 		{
-			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.ThaCau;
+			day_cau.typeAction = TypeAction.ThaCau;
 			velocity = new Vector2(transform.position.x - target.position.x, 
 			                       transform.position.y - target.position.y);
 			velocity.Normalize();
@@ -102,21 +69,21 @@ public class LuoiCauScript : MonoBehaviour {
 	}
 	//kiem tra khi luoi cau ra ngoai tam nhin cua camera
 	void checkMoveOutCameraView() {
-		if(GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.ThaCau) {
-			if(!checkPositionOutBound()) {
-				GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.KeoCau;
-				velocity = -velocity;
-			}
+		if(day_cau.typeAction == TypeAction.ThaCau && !checkPositionOutBound())
+		{
+			day_cau.typeAction = TypeAction.KeoCau;
+			velocity = -velocity;
 		}
 	}
 
 	//kiem tra khi luoi ca keo len mat nuoc
 	void checkKeoCauXong() {
-		if(transform.localPosition.y > maxY && GameObject.Find("dayCau").GetComponent<DayCau>().typeAction == TypeAction.KeoCau) {
+		if(transform.localPosition.y > maxY && day_cau.typeAction == TypeAction.KeoCau) {
 			Debug.Log("keo cau xong");
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-			GameObject.Find("dayCau").GetComponent<DayCau>().typeAction = TypeAction.Nghi;
+			day_cau.ResetDayCau();
 			transform.localPosition = prePosition;
+            
 		}
 	}
 }
