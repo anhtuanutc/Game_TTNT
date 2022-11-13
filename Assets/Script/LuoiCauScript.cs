@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LuoiCauScript : MonoBehaviour {
+public class LuoiCauScript : MonoBehaviour
+{
 	public float speed;
 	public float speedMin;
 	public float speedBegin;
 	public Vector2 velocity;
 	public float maxY;
 	public Transform target;
-	Vector3 prePosition;
 	public DayCau day_cau;
 
 	public int type;
 
 	public bool isUpSpeed;
 	public float timeUpSpeed;
+
+	Vector3 prePosition;
 
 	void Start () {
 		isUpSpeed = false;
@@ -34,56 +36,57 @@ public class LuoiCauScript : MonoBehaviour {
 		}
 	}
 	
+	public void ResetSpeed()
+	{
+		speed = speedBegin;
+	}
 
 	void Update () {
-		checkKeoCauXong();
-//		if(CGameManager.Instance.gameState == EnumStateGame.Play) 
-		{
-			checkTouchScene();
+		CheckKeoCauXong();
+			
+		CheckTouchScene();
 
-			checkMoveOutCameraView();
-		}
+		CheckMoveOutCameraView();
 	}
 	void FixedUpdate() {
-//		if(CGameManager.Instance.gameState == EnumStateGame.Play) 
 		if(day_cau.typeAction == TypeAction.ThaCau || day_cau.typeAction == TypeAction.KeoCau)
-				GetComponent<Rigidbody2D>().velocity = velocity * speed;
+				GetComponent<Rigidbody2D>().velocity = velocity * speed * .5f;
 	}
 
 
-	bool checkPositionOutBound() {
+	bool CheckPosOutBound() {
 		return  gameObject.GetComponent<Renderer>().isVisible ;
 	}
 
-	void checkTouchScene() {
+	void CheckTouchScene() {
 		bool istouch = Input.GetMouseButtonDown(0);
-		
 		if (istouch && day_cau.typeAction == TypeAction.Nghi && day_cau.my_turn)
 		{
 			day_cau.typeAction = TypeAction.ThaCau;
 			velocity = new Vector2(transform.position.x - target.position.x, 
 			                       transform.position.y - target.position.y);
 			velocity.Normalize();
-			speed = speedBegin;
+			ResetSpeed();
 		}
 	}
 	//kiem tra khi luoi cau ra ngoai tam nhin cua camera
-	void checkMoveOutCameraView() {
-		if(day_cau.typeAction == TypeAction.ThaCau && !checkPositionOutBound())
+	void CheckMoveOutCameraView() {
+		if(day_cau.typeAction == TypeAction.ThaCau && !CheckPosOutBound())
 		{
 			day_cau.typeAction = TypeAction.KeoCau;
 			velocity = -velocity;
+			GamePlayController.instance.AniPull();
 		}
 	}
 
 	//kiem tra khi luoi ca keo len mat nuoc
-	void checkKeoCauXong() {
+	void CheckKeoCauXong() {
 		if(transform.localPosition.y > maxY && day_cau.typeAction == TypeAction.KeoCau) {
 			Debug.Log("keo cau xong");
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 			day_cau.ResetDayCau();
 			transform.localPosition = prePosition;
-            
 		}
 	}
+
 }

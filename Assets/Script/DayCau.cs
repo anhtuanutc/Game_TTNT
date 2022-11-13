@@ -40,6 +40,7 @@ public class DayCau : MonoBehaviour {
 	public void ResetDayCau()
     {
 		typeAction = TypeAction.Nghi;
+		GamePlayController.instance.StopAni();
 		if (!my_turn)
 		{
 			transform.rotation = Quaternion.Euler(initAngles);
@@ -49,6 +50,6 @@ public class DayCau : MonoBehaviour {
 	public void ReceivePoint(int point)
     {
 		score += point;
-		GamePlayScript.instance.SetScoretTxt(score);
+		GamePlayController.instance.SetScoretTxt(score);
     }
 }

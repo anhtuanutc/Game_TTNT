@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class VangScript : MonoBehaviour
 {
@@ -17,9 +18,9 @@ public class VangScript : MonoBehaviour
         isMoveFollow = false;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        moveFllowTarget();
+        MoveFllowTarget();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,19 +34,22 @@ public class VangScript : MonoBehaviour
             day_cau.typeAction = TypeAction.KeoCau;
             luoi_cau.velocity = -luoi_cau.velocity;
             luoi_cau.speed -= speed;
+            GamePlayController.instance.AniPull(false);
         }
     }
 
-    void moveFllowTarget()
+    void MoveFllowTarget()
     {
         if (isMoveFollow)
         {
+            GamePlayController game_control = GamePlayController.instance;
+            Transform target = t_luoi_cau;
             if (!day_cau.my_turn)
             {
+                target.GetComponent<LuoiCauScript>().ResetSpeed();
                 isMoveFollow = false;
                 return;
             }
-            Transform target = t_luoi_cau;
             Quaternion tg = Quaternion.Euler(target.parent.transform.rotation.x, target.parent.transform.rotation.y,
                                              90 + target.parent.transform.rotation.z);
             transform.rotation = Quaternion.Slerp(transform.rotation, tg, 0.5f);
@@ -55,7 +59,9 @@ public class VangScript : MonoBehaviour
             if (day_cau.typeAction == TypeAction.Nghi)
             {
                 day_cau.ReceivePoint(score);
+                game_control.StopAni();
                 Destroy(gameObject);
+                DOVirtual.DelayedCall(.2f, () => game_control.CheckResource());
             }
         }
     }
