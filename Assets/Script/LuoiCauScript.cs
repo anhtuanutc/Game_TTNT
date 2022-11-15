@@ -124,7 +124,7 @@ public class LuoiCauScript : MonoBehaviour
         {
 			return;
         }
-		if (GamePlayController.instance.GetRound() > 11 && !selected)
+		if (GamePlayController.instance.GetRound() > 6 && !selected)
         {
 			selected = true;
 			DOVirtual.DelayedCall(Random.Range(1, 3), () =>
