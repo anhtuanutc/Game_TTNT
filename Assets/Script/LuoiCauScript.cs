@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class LuoiCauScript : MonoBehaviour
 {
@@ -10,17 +11,24 @@ public class LuoiCauScript : MonoBehaviour
 	public float maxY;
 	public Transform target;
 	public DayCau day_cau;
+	public Transform point;
 
 	public int type;
 
 	public bool isUpSpeed;
 	public float timeUpSpeed;
 
+	public Transform best_resource = null;
+	float best_dis = float.MaxValue;
+
 	Vector3 prePosition;
+	int number_play;
+	bool is_drop = false, selected;
 
 	void Start () {
 		isUpSpeed = false;
-		prePosition = transform.localPosition; 
+		prePosition = transform.localPosition;
+		number_play = Prefs.NumberPlayer;
 	}
 
 	public IEnumerator TimeUpSpeed ()
@@ -44,7 +52,7 @@ public class LuoiCauScript : MonoBehaviour
 	void Update () {
 		CheckKeoCauXong();
 			
-		CheckTouchScene();
+		CheckDrop();
 
 		CheckMoveOutCameraView();
 	}
@@ -58,10 +66,29 @@ public class LuoiCauScript : MonoBehaviour
 		return  gameObject.GetComponent<Renderer>().isVisible ;
 	}
 
-	void CheckTouchScene() {
-		bool istouch = Input.GetMouseButtonDown(0);
-		if (istouch && day_cau.typeAction == TypeAction.Nghi && day_cau.my_turn)
+	void CheckDrop() {
+        if (day_cau.computer)
+        {
+			AIComputer();
+        }
+        else
+        {
+			switch (number_play)
+			{
+				case 1:
+					is_drop = Input.GetKeyDown(KeyCode.Space);
+					break;
+				case 2:
+					is_drop = Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
+					break;
+				default:
+					is_drop = Input.GetMouseButton(0);
+					break;
+			}
+		}
+		if (is_drop && day_cau.typeAction == TypeAction.Nghi && day_cau.my_turn)
 		{
+			is_drop = false;
 			day_cau.typeAction = TypeAction.ThaCau;
 			velocity = new Vector2(transform.position.x - target.position.x, 
 			                       transform.position.y - target.position.y);
@@ -86,7 +113,51 @@ public class LuoiCauScript : MonoBehaviour
 			GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 			day_cau.ResetDayCau();
 			transform.localPosition = prePosition;
+			selected = false;
+			best_resource = null;
 		}
 	}
 
+	void AIComputer()
+	{
+        if (!day_cau.my_turn)
+        {
+			return;
+        }
+		if (GamePlayController.instance.GetRound() > 11 && !selected)
+        {
+			selected = true;
+			DOVirtual.DelayedCall(Random.Range(1, 3), () =>
+			{
+				is_drop = true;
+			});
+			return;
+		}
+        if (selected)
+		{
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, point.position - transform.position, 15, LayerMask.GetMask("resource"));
+			if (hit && hit.transform == best_resource && day_cau.typeAction == TypeAction.Nghi)
+            {
+				is_drop = true;
+            }
+        }
+        if (best_resource)
+        {
+			return;
+        }
+		selected = true;
+        foreach (Transform item in GamePlayController.instance.parent_resource)
+		{
+			if (Vector2.Distance(transform.position, item.position) < best_dis)
+			{
+				best_dis = Vector2.Distance(transform.position, item.position);
+				best_resource = item;
+			}
+			//RaycastHit2D hit = Physics2D.Raycast(transform.position, item.position - transform.position, 10);
+			//if (hit.collider.CompareTag("resource"))
+   //         {
+   //         }
+        }
+		best_dis = float.MaxValue;
+    }
 }

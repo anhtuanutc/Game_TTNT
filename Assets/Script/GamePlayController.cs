@@ -31,6 +31,7 @@ public class GamePlayController : MonoBehaviour {
 	void Start () {
 		StartGame();
 		StartCoroutine(CountDown());
+		ropes[1].computer = Prefs.NumberPlayer == 1;
 	}
 	public IEnumerator CountDown ()
 	{
@@ -49,6 +50,11 @@ public class GamePlayController : MonoBehaviour {
 		}
 	}
 
+	public int GetRound()
+    {
+		return cur_round;
+    }
+
 	void StartGame()
 	{
 		is_end = false;
@@ -65,6 +71,23 @@ public class GamePlayController : MonoBehaviour {
 		//Random vi tri vang di--------------------------------
 		for (int i = 0; i < 10; i++) {
 			Vector2 pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
+            while (true)
+            {
+				int count = 0;
+                foreach (Transform item in parent_resource)
+                {
+					if (Vector2.Distance(item.position, pos) < 1.5f)
+					{
+						pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
+						break;
+					}
+					count++;
+				}
+                if (count == parent_resource.childCount)
+                {
+					break;
+                }
+            }
 			int index = Random.Range(0, resources.Count);
 			var obj = Instantiate(resources[index], pos, Quaternion.identity, parent_resource);
 		}

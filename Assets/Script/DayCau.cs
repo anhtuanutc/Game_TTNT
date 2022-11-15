@@ -11,6 +11,7 @@ public class DayCau : MonoBehaviour {
 	public bool my_turn;
 	public Vector3 initAngles;
 	public int score;
+	public bool computer;
 
 	LineRenderer rope;
 

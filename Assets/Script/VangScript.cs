@@ -38,6 +38,7 @@ public class VangScript : MonoBehaviour
         }
     }
 
+
     void MoveFllowTarget()
     {
         if (isMoveFollow)

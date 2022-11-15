@@ -21,19 +21,19 @@ public class CanvasController : MonoBehaviour
         string s;
         if (score1 > score2)
         {
-            s = "Player 1 win!";
+            s = Prefs.NumberPlayer == 2 ? "Player 1 win!" : "You winner!";
         }
         else if (score1 == score2)
         {
-            s = "No people win! Continue playing";
+            s = "No people win! Continue playing.";
         }
         else
         {
-            s = "Player 2 win!";
+            s = Prefs.NumberPlayer == 2 ? "Player 2 win!" : "Computer win!";
         }
         txt_win.text = s;
-        txt_score_1.text = "Player 1: " + score1;
-        txt_score_2.text = "Player 2: " + score2;
+        txt_score_1.text = Prefs.NumberPlayer == 2 ? "Player 1: " : "You: " + score1;
+        txt_score_2.text = Prefs.NumberPlayer == 2 ? "Player 2: ": "Computer: " + score2;
         Time.timeScale = 0;
     }
 }

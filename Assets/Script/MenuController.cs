@@ -19,10 +19,12 @@ public class MenuController : MonoBehaviour
         });
         btn_1.onClick.AddListener(() =>
         {
+            Prefs.NumberPlayer = 1;
             SceneManager.LoadScene(1);
         });
         btn_2.onClick.AddListener(() =>
         {
+            Prefs.NumberPlayer = 2;
             SceneManager.LoadScene(1);
         });
         btn_tutorial.onClick.AddListener(() =>
