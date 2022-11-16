@@ -15,6 +15,7 @@ public class GamePlayController : MonoBehaviour {
 	public List<Animator> ani_player;
 	public Transform parent_resource;
 	public List<GameObject> resources;
+	public List<GameObject> rocks;
 
 	public Vector2 limit_x, limit_y;
 
@@ -58,9 +59,7 @@ public class GamePlayController : MonoBehaviour {
 	void StartGame()
 	{
 		is_end = false;
-		time = 15;
 		cur_time = time;
-		round_max = 10;
 		cur_round = round_max;
 		round_player_1 = true;
 		SetTurn();
@@ -69,14 +68,14 @@ public class GamePlayController : MonoBehaviour {
 			item.text = "Score: 0";
 		}
 		//Random vi tri vang di--------------------------------
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 7; i++) {
 			Vector2 pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
             while (true)
             {
 				int count = 0;
                 foreach (Transform item in parent_resource)
                 {
-					if (Vector2.Distance(item.position, pos) < 1.5f)
+					if (Vector2.Distance(item.position, pos) < 1.8f)
 					{
 						pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
 						break;
@@ -91,11 +90,34 @@ public class GamePlayController : MonoBehaviour {
 			int index = Random.Range(0, resources.Count);
 			var obj = Instantiate(resources[index], pos, Quaternion.identity, parent_resource);
 		}
+		for (int i = 0; i < 10; i++)
+		{
+			Vector2 pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
+			while (true)
+			{
+				int count = 0;
+				foreach (Transform item in parent_resource)
+				{
+					if (Vector2.Distance(item.position, pos) < 1.8f)
+					{
+						pos = new Vector2(Random.Range(limit_x.x, limit_x.y), Random.Range(limit_y.x, limit_y.y));
+						break;
+					}
+					count++;
+				}
+				if (count == parent_resource.childCount)
+				{
+					break;
+				}
+			}
+			int index = Random.Range(0, rocks.Count);
+			var obj = Instantiate(rocks[index], pos, Quaternion.identity, parent_resource);
+		}
 	}
 
 	public void SetScoretTxt(int point)
     {
-		score_texts[round_player_1 ? 0 : 1].text = "Score:" + point;
+		score_texts[round_player_1 ? 0 : 1].text = "Score: " + point;
     }
 
 	void SetTurn()

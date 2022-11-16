@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class LuoiCauScript : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class LuoiCauScript : MonoBehaviour
 	public Transform target;
 	public DayCau day_cau;
 	public Transform point;
+	public int round_bot_ngu;
 
 	public int type;
 
@@ -124,13 +126,16 @@ public class LuoiCauScript : MonoBehaviour
         {
 			return;
         }
-		if (GamePlayController.instance.GetRound() > 6 && !selected)
+		if (GamePlayController.instance.GetRound() > GamePlayController.instance.round_max - 1 - round_bot_ngu)
         {
-			selected = true;
-			DOVirtual.DelayedCall(Random.Range(1, 3), () =>
-			{
-				is_drop = true;
-			});
+            if (!selected)
+            {
+				selected = true;
+				DOVirtual.DelayedCall(Random.Range(1, 3), () =>
+				{
+					is_drop = true;
+				});
+			}
 			return;
 		}
         if (selected)
@@ -146,18 +151,40 @@ public class LuoiCauScript : MonoBehaviour
 			return;
         }
 		selected = true;
-        foreach (Transform item in GamePlayController.instance.parent_resource)
+		DOVirtual.DelayedCall(2f, () =>
 		{
-			if (Vector2.Distance(transform.position, item.position) < best_dis)
+			foreach (Transform item in GamePlayController.instance.parent_resource)
 			{
-				best_dis = Vector2.Distance(transform.position, item.position);
-				best_resource = item;
+				if (Vector2.Distance(transform.position, item.position) < best_dis)
+				{
+					best_dis = Vector2.Distance(transform.position, item.position);
+					best_resource = item;
+				}
 			}
-			//RaycastHit2D hit = Physics2D.Raycast(transform.position, item.position - transform.position, 10);
-			//if (hit.collider.CompareTag("resource"))
-   //         {
-   //         }
-        }
-		best_dis = float.MaxValue;
-    }
+		});
+
+		//bot dua theo gia tri va khoang cách
+        //int best_score = -1;
+        //Dictionary<Transform, float> dic_dis = new Dictionary<Transform, float>();
+        //foreach (Transform item in GamePlayController.instance.parent_resource)
+        //{
+        //	dic_dis.Add(item, Vector2.Distance(transform.position, item.position));
+        //}
+
+        //      foreach (var item in dic_dis)
+        //      {
+        //          if (item.Key.GetComponent<VangScript>().score > best_score && item.Value < best_dis)
+        //          {
+        //		best_dis = item.Value;
+        //		best_resource = item.Key;
+        //          }
+        //      }
+
+
+        best_dis = float.MaxValue;
+		//RaycastHit2D hit = Physics2D.Raycast(transform.position, item.position - transform.position, 10);
+		//if (hit.collider.CompareTag("resource"))
+		//{
+		//}
+	}
 }

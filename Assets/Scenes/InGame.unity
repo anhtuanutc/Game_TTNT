@@ -1729,8 +1729,8 @@ MonoBehaviour:
   ropes:
   - {fileID: 1490323538}
   - {fileID: 1711280618}
-  time: 0
-  round_max: 0
+  time: 10
+  round_max: 5
   round_player_1: 1
   ani_player:
   - {fileID: 194331552}
@@ -1740,6 +1740,7 @@ MonoBehaviour:
   - {fileID: 295689260766119068, guid: a208156cb73d0e646af792f27fccd99f, type: 3}
   - {fileID: 7443090364537505735, guid: be8de93f7e9ca1148bf40165b66fcbf4, type: 3}
   - {fileID: 6102853731330046141, guid: 7eeb17f7d78f10e4f84139ba717f4b4b, type: 3}
+  rocks:
   - {fileID: 7443090364537505735, guid: d11d7d9f261eb7a41939b2d65326737b, type: 3}
   limit_x: {x: -7.5, y: 7.5}
   limit_y: {x: -4, y: 0.5}
